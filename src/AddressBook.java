@@ -1,8 +1,10 @@
+import FileOperationHandler.ContactHandlerToJSON;
+
 import java.util.*;
 
 public class AddressBook {
     // May remove final if problems arisen
-    private final Contact contact;
+
     private final List<Contact> addressBook;
 
     private static final String nextLine = "\n";
@@ -10,7 +12,6 @@ public class AddressBook {
 
     public AddressBook() {
         this.addressBook = new ArrayList<>();
-        this.contact = new Contact();
     }
 
     public void addContact(Contact c) {
@@ -34,12 +35,13 @@ public class AddressBook {
         }
     }
 
+
+    @SuppressWarnings("SuspiciousListRemoveInLoop")
     public void removeContact(String name) {
         String trimmedName = name.toLowerCase().trim();
 
         for (int i = 0; i < addressBook.size(); i++) {
             if (addressBook.get(i).getName().toLowerCase().trim().equals(trimmedName)) {
-                //noinspection SuspiciousListRemoveInLoop
                 addressBook.remove(i);
                 System.out.println(name + " Has been deleted successfully!");
             }
@@ -72,7 +74,7 @@ public class AddressBook {
         }
     }
 
-
+    // Contacts list rendering needs to be modularised into its own function + solving the optional parameter problem
     public void reviewContacts() {
 
         if(addressBook.size() == 0) {
@@ -89,16 +91,64 @@ public class AddressBook {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AddressBook that = (AddressBook) o;
-        return Objects.equals(contact, that.contact) && Objects.equals(addressBook, that.addressBook);
+    public Contact editContactInformation(String uuid) {
+        if (addressBook.isEmpty()) {
+            throw new NoSuchElementException("The Address Book Is Empty!");
+        }
+        for(Contact c: addressBook) {
+                if (c.getUniqueID().equals(uuid)) {
+                    return c;
+                }
+            }
+        throw new NoSuchElementException("No contact found with the specified UUID.");
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(contact, addressBook);
+    public List<Contact> searchForAContactByName(String contactName) {
+        ArrayList<Contact> contacts = new ArrayList<>();
+        for(Contact c: addressBook) {
+            if(c.getName().startsWith(contactName)) {
+                contacts.add(c);
+            }
+        }
+        return contacts;
+    }
+
+    public List<Contact> searchForAContactByPhoneNum(String contactPN) {
+        ArrayList<Contact> contacts = new ArrayList<>();
+        for(Contact c: addressBook) {
+            if(c.getPhoneNumber().startsWith(contactPN)) {
+                contacts.add(c);
+            }
+        }
+        return contacts;
+    }
+
+
+
+
+    public boolean renderAllContactList() {
+        boolean isEmpty = false;
+        if(addressBook.size() == 0) {
+            isEmpty = true;
+        } else {
+            for (Contact contact : addressBook) {
+                System.out.println("----------------------------------------");
+                System.out.println("UserId      : " + contact.getUniqueID());
+                System.out.println("Name        : " + contact.getName());
+                System.out.println("Email       : " + contact.getEmail());
+                System.out.println("PhoneNumber : " + contact.getPhoneNumber());
+                System.out.println("----------------------------------------");
+            }
+        }
+        return isEmpty;
+    }
+    public void renderAllContactListNoID(List<Contact> contactList) {
+            for (Contact contact : contactList) {
+                System.out.println("----------------------------------------");
+                System.out.println("Name        : " + contact.getName());
+                System.out.println("Email       : " + contact.getEmail());
+                System.out.println("PhoneNumber : " + contact.getPhoneNumber());
+                System.out.println("----------------------------------------");
+        }
     }
 }
