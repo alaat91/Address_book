@@ -1,5 +1,5 @@
-# AddressBook
-Java CLI program to store, delete, edit, and sort contacts.
+# Description
+Java CLI program to store, delete, edit, and sort contacts as an address book.
 # Skills covered
 - Object-oriented design using classes and inheritance to decouple functionality and maintainability reasons.
 - Error handling to capture runtime errors properly.
